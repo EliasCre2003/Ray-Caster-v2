@@ -2,6 +2,7 @@ package eliascregard.rendering;
 
 import org.lwjgl.BufferUtils;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -13,7 +14,7 @@ public class Model {
     private final int textureId;
     private final int indexId;
 
-    public Model(float[] vertices, float[] textureCoords, int[] indices) {
+    public Model(double[] vertices, double[] textureCoords, int[] indices) {
         drawCount = indices.length;
 
         verticesId = glGenBuffers();
@@ -36,14 +37,15 @@ public class Model {
     }
 
     public void render() {
+
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
         glBindBuffer(GL_ARRAY_BUFFER, verticesId);
-        glVertexPointer(2, GL_FLOAT, 0, 0);
+        glVertexPointer(2, GL_DOUBLE, 0, 0);
 
         glBindBuffer(GL_ARRAY_BUFFER, textureId);
-        glTexCoordPointer(2, GL_FLOAT, 0, 0);
+        glTexCoordPointer(2, GL_DOUBLE, 0, 0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
         glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
@@ -55,8 +57,8 @@ public class Model {
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 
-    private FloatBuffer createBuffer(float[] data) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+    private DoubleBuffer createBuffer(double[] data) {
+        DoubleBuffer buffer = BufferUtils.createDoubleBuffer(data.length);
         buffer.put(data);
         buffer.flip();
         return buffer;

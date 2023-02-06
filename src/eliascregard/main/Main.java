@@ -41,7 +41,7 @@ public class Main {
     }
 
     private void init() {
-        // Setup an error callback. The default implementation
+        // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -55,12 +55,13 @@ public class Main {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
         // Create the window
-        window = glfwCreateWindow(SCREEN_SIZE.width, SCREEN_SIZE.height, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(SCREEN_SIZE.width, SCREEN_SIZE.height, "Ray Caster", NULL, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
+        System.out.println(window);
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        // Set up a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
@@ -88,7 +89,7 @@ public class Main {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         // Enable v-sync
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -101,17 +102,24 @@ public class Main {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
-//        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_TEXTURE_2D);
 
         Game game = new Game(new Map(
                 new int[][]{
-                        {1, 1, 1, 1, 2, 1},
-                        {1, 0, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 2},
-                        {1, 0, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 1},
-                        {2, 2, 2, 2, 2, 2}
-        }));
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                        {1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0},
+                        {1, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+                }
+        ));
 
 //        float[] vertices = {
 //                -0.5f, 0.5f,
@@ -148,6 +156,27 @@ public class Main {
 //        Texture texture2 = new Texture("src/eliascregard/res/textures/4.png");
 
         // Set the clear color
+
+        Model model = new Model(
+                new double[]{
+                        -0.5, 0.5,
+                        0.5, 0.5,
+                        0.5, -0.5,
+                        -0.5, -0.5
+                },
+                new double[]{
+                        0, 0,
+                        1, 0,
+                        1, 1,
+                        0, 1
+                },
+                new int[]{
+                        0, 1, 2,
+                        2, 3, 0
+                }
+        );
+        Texture texture = new Texture("src/eliascregard/res/textures/5.png");
+
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
@@ -155,27 +184,13 @@ public class Main {
         double deltaTime = 0;
         while (!glfwWindowShouldClose(window)) {
             long startTime = System.nanoTime();
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-                System.out.println("W");
-            }
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             game.update(window, deltaTime);
 
-
-            game.draw(window);
-//            glBegin(GL_QUADS);
-//            glVertex2d(0, 1);
-//            glVertex2d(1, 1);
-//            glVertex2d(1, 0);
-//            glVertex2d(0, 0);
-//
-//            glVertex2d(-1, 0);
-//            glVertex2d(0, 0);
-//            glVertex2d(0, -1);
-//            glVertex2d(-1, -0.5);
-//            glEnd();
-
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            game.draw();
+//            texture.bind();
+//            model.render();
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
@@ -184,7 +199,7 @@ public class Main {
 
 
             deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0;
-            System.out.println(deltaTime);
+            System.out.println((int) (1 / deltaTime) + " fps");
 
         }
     }

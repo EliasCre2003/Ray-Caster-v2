@@ -1,6 +1,6 @@
 package eliascregard.game;
 
-import java.awt.*;
+import eliascregard.rendering.ObjectRenderer;
 
 public class Game {
 
@@ -37,8 +37,8 @@ public class Game {
         return rayCaster;
     }
 
-    public void draw(long window) {
+    public void draw() {
 
-        objectRenderer.draw(window);
+        objectRenderer.draw();
     }
 }

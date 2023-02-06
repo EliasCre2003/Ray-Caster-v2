@@ -1,9 +1,9 @@
-package eliascregard.game;
+package eliascregard.rendering;
 
 import eliascregard.game.Game;
-import eliascregard.game.GameObject;
-import eliascregard.rendering.Texture;
-import org.w3c.dom.Text;
+import eliascregard.game.Ray;
+import eliascregard.util.Vector2;
+import static eliascregard.util.Global.*;
 
 import static eliascregard.main.Settings.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -28,39 +28,59 @@ public class ObjectRenderer {
         wallTextures = loadWallTextures();
     }
 
-    public void draw(long window) {
-        renderGameObjects(window);
+    public void draw() {
+        renderGameObjects();
     }
 
-    private void renderGameObjects(long window) {
-//        for (GameObject gameObject : game.getRayCasting().getObjectsToRender()) {
-//            BufferedImage wallColumn = gameObject.wallColumn();
-//            if (wallColumn != null) {
-//                g2.drawImage(wallColumn, (int) gameObject.position().x, (int) gameObject.position().y, null);
-//            }
-//        }
-        Ray[] gameObjects = game.getRayCasting().getRayCastingResults();
-        glBegin(GL_QUADS);
-        for (int i = 0; i < gameObjects.length; i++) {
-            Ray gameObject = gameObjects[i];
-            double x = (double) i * SCALE / HALF_WIDTH - 1;
-            double y = 1 - ((HALF_HEIGHT - gameObject.projectionHeight() / 2) / HALF_HEIGHT);
+    private void renderGameObjects() {
+        Ray[] rays = game.getRayCasting().getRayCastingResults();
+        for (int i = 0; i < NUM_RAYS; i++) {
+            Ray ray = rays[i];
+            Vector2 position = pixelCoordsToGLCoords(
+                    (double) i * SCALE,
+                    HALF_HEIGHT - ray.projectionHeight() / 2);
             double width = SCALE / HALF_WIDTH;
-            double height = gameObject.projectionHeight() / HALF_HEIGHT - 1;
+            double height = ray.projectionHeight() / HALF_HEIGHT;
 
-            glColor3f(1f,0,0);
-            glVertex2d(x, y);
-            glColor3f(0,1f,0);
+            Vector2 texturePosition = pixelCoordsToGLCoords(
+                    ray.offset() * (HALF_HEIGHT - SCALE), 0
+            );
+            double textureWidth = SCALE / HALF_WIDTH;
+            double textureHeight = 1;
+            if (ray.projectionHeight() >= SCREEN_SIZE.height) {
+                position.y = 1;
+                width = SCALE / HALF_WIDTH;
+                height = 2;
 
-            glVertex2d(x + width, y);
-            glColor3f(0,0,1f);
+                textureHeight = (2 / (ray.projectionHeight() / HALF_HEIGHT));
+                textureHeight = Math.min(Math.max(textureHeight, 0), 1);
+                texturePosition.y = textureHeight / 2;
+                System.out.println(texturePosition.y);
+                textureWidth = SCALE / HALF_WIDTH;
+            }
 
-            glVertex2d(x + width, y - height);
-            glColor3f(1f,0,0);
+            Model model = new Model(
+                    new double[]{
+                            position.x, position.y,
+                            position.x + width, position.y,
+                            position.x + width, position.y - height,
+                            position.x, position.y - height
+                    },
+                    new double[]{
+                            texturePosition.x + textureWidth, texturePosition.y - textureHeight,
+                            texturePosition.x, texturePosition.y - textureHeight,
+                            texturePosition.x, texturePosition.y,
+                            texturePosition.x + textureWidth, texturePosition.y
+                    },
+                    new int[]{
+                            0, 1, 2,
+                            2, 3, 0
+                    }
 
-            glVertex2d(x, y - height);
+            );
+            wallTextures.get(String.valueOf(ray.texture())).bind();
+            model.render();
         }
-        glEnd();
     }
 
     public static BufferedImage getTexture(String path, Dimension resolution) {

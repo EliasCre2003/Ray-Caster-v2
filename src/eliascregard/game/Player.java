@@ -33,15 +33,13 @@ public class Player {
         this.angle = angle % Math.TAU;
     }
     public void rotate(double deltaAngle) {
-        angle += deltaAngle;
-        angle = angle % Math.TAU;
+        angle = (angle + deltaAngle) % Math.TAU;
     }
 
     public void update(long window, double deltaTime) {
         Vector2 deltaPosition = new Vector2();
         double deltaAngle = 0;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            System.out.println("S");
             deltaPosition.x += 1;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
