@@ -6,6 +6,7 @@ import eliascregard.rendering.Texture;
 import org.w3c.dom.Text;
 
 import static eliascregard.main.Settings.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -38,6 +39,28 @@ public class ObjectRenderer {
 //                g2.drawImage(wallColumn, (int) gameObject.position().x, (int) gameObject.position().y, null);
 //            }
 //        }
+        Ray[] gameObjects = game.getRayCasting().getRayCastingResults();
+        glBegin(GL_QUADS);
+        for (int i = 0; i < gameObjects.length; i++) {
+            Ray gameObject = gameObjects[i];
+            double x = (double) i * SCALE / HALF_WIDTH - 1;
+            double y = 1 - ((HALF_HEIGHT - gameObject.projectionHeight() / 2) / HALF_HEIGHT);
+            double width = SCALE / HALF_WIDTH;
+            double height = gameObject.projectionHeight() / HALF_HEIGHT - 1;
+
+            glColor3f(1f,0,0);
+            glVertex2d(x, y);
+            glColor3f(0,1f,0);
+
+            glVertex2d(x + width, y);
+            glColor3f(0,0,1f);
+
+            glVertex2d(x + width, y - height);
+            glColor3f(1f,0,0);
+
+            glVertex2d(x, y - height);
+        }
+        glEnd();
     }
 
     public static BufferedImage getTexture(String path, Dimension resolution) {
@@ -69,11 +92,11 @@ public class ObjectRenderer {
 
     private static HashMap<String, Texture> loadWallTextures() {
         HashMap<String, Texture> textures = new HashMap<>();
-        textures.put("1", new Texture("src/eliascregard/resources/textures/1.png"));
-        textures.put("2", new Texture("src/eliascregard/resources/textures/2.png"));
-        textures.put("3", new Texture("src/eliascregard/resources/textures/3.png"));
-        textures.put("4", new Texture("src/eliascregard/resources/textures/4.png"));
-        textures.put("5", new Texture("src/eliascregard/resources/textures/5.png"));
+        textures.put("1", new Texture("src/eliascregard/res/textures/1.png"));
+        textures.put("2", new Texture("src/eliascregard/res/textures/2.png"));
+        textures.put("3", new Texture("src/eliascregard/res/textures/3.png"));
+        textures.put("4", new Texture("src/eliascregard/res/textures/4.png"));
+        textures.put("5", new Texture("src/eliascregard/res/textures/5.png"));
         return textures;
     }
 

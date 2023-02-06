@@ -41,6 +41,7 @@ public class Player {
         Vector2 deltaPosition = new Vector2();
         double deltaAngle = 0;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            System.out.println("S");
             deltaPosition.x += 1;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {

@@ -1,6 +1,8 @@
 package eliascregard.main;
 import static eliascregard.main.Settings.*;
 
+import eliascregard.game.Game;
+import eliascregard.game.Map;
 import eliascregard.rendering.Model;
 import eliascregard.rendering.Texture;
 
@@ -14,6 +16,8 @@ import java.nio.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -97,70 +101,90 @@ public class Main {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
-        glEnable(GL_TEXTURE_2D);
+//        glEnable(GL_TEXTURE_2D);
 
-        float[] vertices = {
-                -0.5f, 0.5f,
-                0.5f, 0.5f,
-                0.5f, -0.5f,
-                -0.5f, -0.5f,
+        Game game = new Game(new Map(
+                new int[][]{
+                        {1, 1, 1, 1, 2, 1},
+                        {1, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 2},
+                        {1, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 1},
+                        {2, 2, 2, 2, 2, 2}
+        }));
 
-
-        };
-
-        float[] textureVertices = {
-                0.25f, 0.25f,
-                0.75f, 0.25f,
-                0.75f, 0.75f,
-                0.25f, 0.75f
-        };
-
-        int[] indices = {
-                0, 1, 2,
-                2, 3, 0
-        };
-
-        Model model = new Model(vertices, textureVertices, indices);
-
-        Texture texture = new Texture("src/eliascregard/res/textures/5.png");
-        texture.bind();
+//        float[] vertices = {
+//                -0.5f, 0.5f,
+//                0.5f, 0.5f,
+//                0.5f, -0.5f,
+//                -0.5f, -0.5f,
+//
+//
+//        };
+//
+//        float[] textureVertices = {
+//                0.25f, 0.25f,
+//                0.75f, 0.25f,
+//                0.75f, 0.75f,
+//                0.25f, 0.75f
+//        };
+//
+//        int[] indices = {
+//                0, 1, 2,
+//                2, 3, 0
+//        };
+//
+//        Model model = new Model(vertices, textureVertices, indices);
+//
+//        Texture texture = new Texture("src/eliascregard/res/textures/5.png");
+//
+//        Model model2 = new Model(new float[]{
+//                0.5f, 1,
+//                1, 1,
+//                1, 0.5f,
+//                0.5f, 0.5f
+//        }, textureVertices, indices);
+//
+//        Texture texture2 = new Texture("src/eliascregard/res/textures/4.png");
 
         // Set the clear color
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
+        double deltaTime = 0;
         while (!glfwWindowShouldClose(window)) {
-
+            long startTime = System.nanoTime();
             if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
                 System.out.println("W");
             }
 
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            game.update(window, deltaTime);
 
+
+            game.draw(window);
 //            glBegin(GL_QUADS);
-//                glTexCoord2f(0,0);
-//                glVertex2f(-0.5f, 0.5f);
+//            glVertex2d(0, 1);
+//            glVertex2d(1, 1);
+//            glVertex2d(1, 0);
+//            glVertex2d(0, 0);
 //
-//                glTexCoord2f(1,0);
-//                glVertex2f(0.5f, 0.5f);
-//
-//                glTexCoord2f(1,1);
-//                glVertex2f(0.5f, -0.5f);
-//
-//                glTexCoord2f(0,1);
-//                glVertex2f(-0.5f, -0.5f);
+//            glVertex2d(-1, 0);
+//            glVertex2d(0, 0);
+//            glVertex2d(0, -1);
+//            glVertex2d(-1, -0.5);
 //            glEnd();
-            model.render();
-
-
 
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+
+
+            deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0;
+            System.out.println(deltaTime);
 
         }
     }

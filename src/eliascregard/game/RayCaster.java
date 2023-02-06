@@ -26,44 +26,44 @@ public class RayCaster {
     }
 
     private void updateObjectsToRender() {
-        for (int i = 0; i < NUM_RAYS; i++) {
-            Ray ray = rayCastingResults[i];
-            double depth = ray.depth();
-            double projectionHeight = ray.projectionHeight();
-            int texture = ray.texture();
-            double offset = ray.offset();
+//        for (int i = 0; i < NUM_RAYS; i++) {
+//            Ray ray = rayCastingResults[i];
+//            double depth = ray.depth();
+//            double projectionHeight = ray.projectionHeight();
+//            int texture = ray.texture();
+//            double offset = ray.offset();
+//
+//            BufferedImage wallColumn;
+//            Vector2 wallPosition;
+//            if (projectionHeight < SCREEN_SIZE.height){
+//                wallColumn = textures.get(String.valueOf(texture)).getSubimage(
+//                        (int) Math.ceil(offset * (TEXTURE_SIZE - SCALE)), 0 , SCALE, TEXTURE_SIZE
+//                );
+//                BufferedImage resizedImage = new BufferedImage(SCALE, (int) projectionHeight, BufferedImage.TYPE_INT_ARGB);
+//                AffineTransform at = new AffineTransform();
+//                at.scale((double) SCALE / wallColumn.getWidth(), projectionHeight / wallColumn.getHeight());
+//                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//                wallColumn = scaleOp.filter(wallColumn, resizedImage);
+//                wallPosition = new Vector2(i * SCALE, HALF_HEIGHT - projectionHeight / 2);
+//            } else {
+//                double textureHeight = TEXTURE_SIZE * SCREEN_SIZE.height / projectionHeight;
+//                textureHeight = Math.min(Math.max(textureHeight, 1), TEXTURE_SIZE-1);
+//                wallColumn = textures.get(String.valueOf(texture)).getSubimage(
+//                        (int) Math.ceil(offset * (TEXTURE_SIZE - SCALE)),
+//                        (int) Math.ceil(HALF_TEXTURE_SIZE - textureHeight / 2),
+//                        SCALE, (int) Math.ceil(textureHeight)
+//                );
+//                BufferedImage resizedImage = new BufferedImage(SCALE, SCREEN_SIZE.height, BufferedImage.TYPE_INT_ARGB);
+//                AffineTransform at = new AffineTransform();
+//                at.scale((double) SCALE / wallColumn.getWidth(),  (double) SCREEN_SIZE.height / wallColumn.getHeight());
+//                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//                wallColumn = scaleOp.filter(wallColumn, resizedImage);
+//                wallPosition = new Vector2(i * SCALE, 0);
+//
+//            }
+//            objectsToRender[i] = new GameObject(depth, wallColumn, wallPosition);
 
-            BufferedImage wallColumn;
-            Vector2 wallPosition;
-            if (projectionHeight < SCREEN_SIZE.height){
-                wallColumn = textures.get(String.valueOf(texture)).getSubimage(
-                        (int) Math.ceil(offset * (TEXTURE_SIZE - SCALE)), 0 , SCALE, TEXTURE_SIZE
-                );
-                BufferedImage resizedImage = new BufferedImage(SCALE, (int) projectionHeight, BufferedImage.TYPE_INT_ARGB);
-                AffineTransform at = new AffineTransform();
-                at.scale((double) SCALE / wallColumn.getWidth(), projectionHeight / wallColumn.getHeight());
-                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-                wallColumn = scaleOp.filter(wallColumn, resizedImage);
-                wallPosition = new Vector2(i * SCALE, HALF_HEIGHT - projectionHeight / 2);
-            } else {
-                double textureHeight = TEXTURE_SIZE * SCREEN_SIZE.height / projectionHeight;
-                textureHeight = Math.min(Math.max(textureHeight, 1), TEXTURE_SIZE-1);
-                wallColumn = textures.get(String.valueOf(texture)).getSubimage(
-                        (int) Math.ceil(offset * (TEXTURE_SIZE - SCALE)),
-                        (int) Math.ceil(HALF_TEXTURE_SIZE - textureHeight / 2),
-                        SCALE, (int) Math.ceil(textureHeight)
-                );
-                BufferedImage resizedImage = new BufferedImage(SCALE, SCREEN_SIZE.height, BufferedImage.TYPE_INT_ARGB);
-                AffineTransform at = new AffineTransform();
-                at.scale((double) SCALE / wallColumn.getWidth(),  (double) SCREEN_SIZE.height / wallColumn.getHeight());
-                AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-                wallColumn = scaleOp.filter(wallColumn, resizedImage);
-                wallPosition = new Vector2(i * SCALE, 0);
-
-            }
-            objectsToRender[i] = new GameObject(depth, wallColumn, wallPosition);
-
-        }
+//        }
     }
 
     private void castRays() {
