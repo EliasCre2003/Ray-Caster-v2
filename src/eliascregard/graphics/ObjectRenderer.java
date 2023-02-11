@@ -1,4 +1,4 @@
-package eliascregard.rendering;
+package eliascregard.graphics;
 
 import eliascregard.game.Game;
 import eliascregard.game.Ray;
@@ -6,7 +6,6 @@ import eliascregard.util.Vector2;
 import static eliascregard.util.Global.*;
 
 import static eliascregard.main.Settings.*;
-import static org.lwjgl.opengl.GL11.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -43,9 +42,9 @@ public class ObjectRenderer {
             double height = ray.projectionHeight() / HALF_HEIGHT;
 
             Vector2 texturePosition = pixelCoordsToGLCoords(
-                    ray.offset() * (HALF_HEIGHT - SCALE), 0
+                    ray.offset() * (HALF_HEIGHT - SCALE) * 2, 0
             );
-            double textureWidth = SCALE / HALF_WIDTH;
+            double textureWidth = SCALE / 2 * HALF_WIDTH;
             double textureHeight = 1;
             if (ray.projectionHeight() >= SCREEN_SIZE.height) {
                 position.y = 1;
@@ -55,7 +54,6 @@ public class ObjectRenderer {
                 textureHeight = (2 / (ray.projectionHeight() / HALF_HEIGHT));
                 textureHeight = Math.min(Math.max(textureHeight, 0), 1);
                 texturePosition.y = textureHeight / 2;
-                System.out.println(texturePosition.y);
                 textureWidth = SCALE / HALF_WIDTH;
             }
 
@@ -78,7 +76,7 @@ public class ObjectRenderer {
                     }
 
             );
-            wallTextures.get(String.valueOf(ray.texture())).bind();
+            wallTextures.get(String.valueOf(ray.texture())).bind(0);
             model.render();
         }
     }

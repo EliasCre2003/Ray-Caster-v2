@@ -3,9 +3,10 @@ import static eliascregard.main.Settings.*;
 
 import eliascregard.game.Game;
 import eliascregard.game.Map;
-import eliascregard.rendering.Model;
-import eliascregard.rendering.Texture;
+import eliascregard.graphics.Model;
+import eliascregard.graphics.Shader;
 
+import eliascregard.graphics.Texture;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -16,8 +17,6 @@ import java.nio.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -104,78 +103,50 @@ public class Main {
         GL.createCapabilities();
         glEnable(GL_TEXTURE_2D);
 
-        Game game = new Game(new Map(
-                new int[][]{
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-                        {1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0},
-                        {1, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-                        {1, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-                }
-        ));
+//        Game game = new Game(new Map(
+//                new int[][]{
+//                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+//                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+//                        {1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1},
+//                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+//                        {1, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0},
+//                        {1, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+//                        {1, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
+//                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+//                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+//                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+//                }
+//        ));
 
-//        float[] vertices = {
-//                -0.5f, 0.5f,
-//                0.5f, 0.5f,
-//                0.5f, -0.5f,
-//                -0.5f, -0.5f,
-//
-//
-//        };
-//
-//        float[] textureVertices = {
-//                0.25f, 0.25f,
-//                0.75f, 0.25f,
-//                0.75f, 0.75f,
-//                0.25f, 0.75f
-//        };
-//
-//        int[] indices = {
-//                0, 1, 2,
-//                2, 3, 0
-//        };
-//
-//        Model model = new Model(vertices, textureVertices, indices);
-//
-//        Texture texture = new Texture("src/eliascregard/res/textures/5.png");
-//
-//        Model model2 = new Model(new float[]{
-//                0.5f, 1,
-//                1, 1,
-//                1, 0.5f,
-//                0.5f, 0.5f
-//        }, textureVertices, indices);
-//
-//        Texture texture2 = new Texture("src/eliascregard/res/textures/4.png");
+        double[] vertices = {
+                -0.5, 0.5, 0,
+                0.5, 0.5, 0,
+                0.5, -0.5, 0,
+                -0.5, -0.5, 0
 
-        // Set the clear color
 
-        Model model = new Model(
-                new double[]{
-                        -0.5, 0.5,
-                        0.5, 0.5,
-                        0.5, -0.5,
-                        -0.5, -0.5
-                },
-                new double[]{
-                        0, 0,
-                        1, 0,
-                        1, 1,
-                        0, 1
-                },
-                new int[]{
-                        0, 1, 2,
-                        2, 3, 0
-                }
-        );
-        Texture texture = new Texture("src/eliascregard/res/textures/5.png");
+        };
+
+        double[] textureVertices = {
+                0, 0,
+                1, 0,
+                1, 1,
+                0, 1
+        };
+
+        int[] indices = {
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        Model model = new Model(vertices, textureVertices, indices);
+        Shader shader = new Shader(RES_FOLDER + "shaders/shader.vs", RES_FOLDER + "shaders/shader.fs");
+        Texture texture = new Texture(RES_FOLDER + "textures/1.png");
+        texture.bind(0);
+        texture = new Texture(RES_FOLDER + "textures/2.png");
+        texture.bind(1);
 
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 
@@ -185,12 +156,15 @@ public class Main {
         while (!glfwWindowShouldClose(window)) {
             long startTime = System.nanoTime();
 
-            game.update(window, deltaTime);
+//            game.update(window, deltaTime);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            game.draw();
-//            texture.bind();
-//            model.render();
+//            game.draw();
+
+            shader.bind();
+            shader.setUniform("sampler", 0);
+            model.render();
+
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
@@ -199,7 +173,7 @@ public class Main {
 
 
             deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0;
-            System.out.println((int) (1 / deltaTime) + " fps");
+//            System.out.println((int) (1 / deltaTime) + " fps");
 
         }
     }

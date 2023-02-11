@@ -1,6 +1,6 @@
 package eliascregard.game;
 
-import eliascregard.rendering.ObjectRenderer;
+import eliascregard.graphics.ObjectRenderer;
 
 public class Game {
 
