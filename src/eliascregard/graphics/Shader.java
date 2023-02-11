@@ -2,6 +2,10 @@ package eliascregard.graphics;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -63,6 +67,15 @@ public class Shader {
         int location = glGetUniformLocation(programID, name);
         if (location != -1) {
             glUniform1f(location, value);
+        }
+    }
+
+    public void setUniform(String name, Matrix4f value) {
+        int location = glGetUniformLocation(programID, name);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        value.get(buffer);
+        if (location != -1) {
+            glUniformMatrix4fv(location,false, buffer);
         }
     }
 
