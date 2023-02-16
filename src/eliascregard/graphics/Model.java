@@ -14,6 +14,7 @@ public class Model {
     private final int verticesId;
     private final int textureId;
     private final int indexId;
+    private static final IntBuffer buffer = indexBuffer();
 
     public Model(double[] vertices, double[] textureCoords, int[] indices) {
         drawCount = indices.length;
@@ -67,6 +68,17 @@ public class Model {
     private FloatBuffer createBuffer(float[] data) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
         buffer.put(data);
+        buffer.flip();
+        return buffer;
+    }
+
+    private static IntBuffer indexBuffer() {
+        int[] indices = {
+                0, 1, 2,
+                2, 3, 0
+        };
+        IntBuffer buffer = BufferUtils.createIntBuffer(6);
+        buffer.put(indices);
         buffer.flip();
         return buffer;
     }

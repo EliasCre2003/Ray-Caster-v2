@@ -13,7 +13,7 @@ public class RayCaster {
     private final Game game;
     private Ray[] rayCastingResults;
     private GameObject[] objectsToRender;
-    private final HashMap<String, Texture> textures;
+    private final Texture[] textures;
 
     public RayCaster(Game game) {
         this.game = game;

@@ -7,6 +7,7 @@ import eliascregard.graphics.Model;
 import eliascregard.graphics.Shader;
 
 import eliascregard.graphics.Texture;
+import org.joml.Matrix4f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -88,7 +89,7 @@ public class Main {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         // Enable v-sync
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -103,22 +104,22 @@ public class Main {
         GL.createCapabilities();
         glEnable(GL_TEXTURE_2D);
 
-//        Game game = new Game(new Map(
-//                new int[][]{
-//                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-//                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-//                        {1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1},
-//                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-//                        {1, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0},
-//                        {1, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-//                        {1, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
-//                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-//                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
-//                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-//                }
-//        ));
+        Game game = new Game(new Map(
+                new int[][]{
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+                        {1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0},
+                        {1, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                        {1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1},
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+                }
+        ));
 
         double[] vertices = {
                 -0.5, 0.5, 0,
@@ -141,12 +142,17 @@ public class Main {
                 2, 3, 0
         };
 
-        Model model = new Model(vertices, textureVertices, indices);
-        Shader shader = new Shader(RES_FOLDER + "shaders/shader.vs", RES_FOLDER + "shaders/shader.fs");
-        Texture texture = new Texture(RES_FOLDER + "textures/1.png");
-        texture.bind(0);
-        texture = new Texture(RES_FOLDER + "textures/2.png");
-        texture.bind(1);
+//        Shader shader = new Shader(RES_FOLDER + "shaders/shader_vs.glsl", RES_FOLDER + "shaders/shader_fs.glsl");
+//        shader.bind();
+//        Model model = new Model(vertices, textureVertices, indices);
+//
+//        Texture texture1 = new Texture(RES_FOLDER + "textures/1.png");
+//
+//        Texture texture2 = new Texture(RES_FOLDER + "textures/2.png");
+//
+//
+//        Matrix4f projection1 = new Matrix4f().ortho(-HALF_WIDTH, HALF_WIDTH, -HALF_HEIGHT, HALF_HEIGHT, -1, 1).scale(TEXTURE_SIZE);
+//        Matrix4f projection2 = new Matrix4f().ortho(-HALF_WIDTH, HALF_WIDTH, -HALF_HEIGHT, HALF_HEIGHT, -1, 1).scale(HALF_TEXTURE_SIZE);
 
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 
@@ -156,14 +162,27 @@ public class Main {
         while (!glfwWindowShouldClose(window)) {
             long startTime = System.nanoTime();
 
-//            game.update(window, deltaTime);
+            long time = System.nanoTime();
+            game.update(window, deltaTime);
+//            System.out.println("update: " + (System.nanoTime() - time) / 1_000_000_000.0);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-//            game.draw();
 
-            shader.bind();
-            shader.setUniform("sampler", 0);
-            model.render();
+            time = System.nanoTime();
+            game.draw();
+//            System.out.println("draw: " + (System.nanoTime() - time) / 1_000_000_000.0);
+
+//            for (int i = 0; i < 500; i++) {
+//                shader.setUniform("sampler", 1);
+//                shader.setUniform("projection", projection1);
+//                model.render();
+//                texture1.bind(1);
+//
+//                shader.setUniform("sampler", 2);
+//                shader.setUniform("projection", projection2);
+//                model.render();
+//                texture2.bind(2);
+//            }
 
             glfwSwapBuffers(window); // swap the color buffers
 
@@ -173,7 +192,7 @@ public class Main {
 
 
             deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0;
-//            System.out.println((int) (1 / deltaTime) + " fps");
+            System.out.println((int) (1 / deltaTime) + " fps");
 
         }
     }

@@ -6,6 +6,7 @@ import eliascregard.util.Vector2;
 import static eliascregard.util.Global.*;
 
 import static eliascregard.main.Settings.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,12 +20,17 @@ import java.util.HashMap;
 public class ObjectRenderer {
 
     private final Game game;
-    private final HashMap<String, Texture> wallTextures;
+    private final Texture[] wallTextures;
+    private final Shader shader;
 
 
     public ObjectRenderer(Game game) {
         this.game = game;
         wallTextures = loadWallTextures();
+        shader = new Shader(
+                RES_FOLDER + "shaders/game_shader_vs.glsl",
+                RES_FOLDER + "shaders/game_shader_fs.glsl"
+        );
     }
 
     public void draw() {
@@ -42,42 +48,35 @@ public class ObjectRenderer {
             double height = ray.projectionHeight() / HALF_HEIGHT;
 
             Vector2 texturePosition = pixelCoordsToGLCoords(
-                    ray.offset() * (HALF_HEIGHT - SCALE) * 2, 0
+                    ray.offset() * (HALF_WIDTH - SCALE), 0
             );
-            double textureWidth = SCALE / 2 * HALF_WIDTH;
+            double textureWidth = SCALE / SCREEN_SIZE.width;
             double textureHeight = 1;
-            if (ray.projectionHeight() >= SCREEN_SIZE.height) {
-                position.y = 1;
-                width = SCALE / HALF_WIDTH;
-                height = 2;
+//            if (ray.projectionHeight() >= SCREEN_SIZE.height) {
+//                position.y = 1;
+//                width = SCALE / HALF_WIDTH;
+//                height = 2;
+//
+//                textureHeight = (2 / (ray.projectionHeight() / HALF_HEIGHT));
+//                textureHeight = Math.min(Math.max(textureHeight, 0), 1);
+//                texturePosition.set(-texturePosition.x, -textureHeight / 2);
+//                textureWidth = -SCALE / HALF_WIDTH;
+//            }
+            wallTextures[ray.texture()-1].bind();
 
-                textureHeight = (2 / (ray.projectionHeight() / HALF_HEIGHT));
-                textureHeight = Math.min(Math.max(textureHeight, 0), 1);
-                texturePosition.y = textureHeight / 2;
-                textureWidth = SCALE / HALF_WIDTH;
-            }
+            glBegin(GL_QUADS);
+                glTexCoord2d(texturePosition.x, texturePosition.y);
+                glVertex2d(position.x, position.y);
 
-            Model model = new Model(
-                    new double[]{
-                            position.x, position.y,
-                            position.x + width, position.y,
-                            position.x + width, position.y - height,
-                            position.x, position.y - height
-                    },
-                    new double[]{
-                            texturePosition.x + textureWidth, texturePosition.y - textureHeight,
-                            texturePosition.x, texturePosition.y - textureHeight,
-                            texturePosition.x, texturePosition.y,
-                            texturePosition.x + textureWidth, texturePosition.y
-                    },
-                    new int[]{
-                            0, 1, 2,
-                            2, 3, 0
-                    }
+                glTexCoord2d(texturePosition.x + textureWidth, texturePosition.y);
+                glVertex2d(position.x + width, position.y);
 
-            );
-            wallTextures.get(String.valueOf(ray.texture())).bind(0);
-            model.render();
+                glTexCoord2d(texturePosition.x + textureWidth, texturePosition.y + textureHeight);
+                glVertex2d(position.x + width, position.y - height);
+
+                glTexCoord2d(texturePosition.x, texturePosition.y + textureHeight);
+                glVertex2d(position.x, position.y - height);
+            glEnd();
         }
     }
 
@@ -104,17 +103,18 @@ public class ObjectRenderer {
         return getTexture(path, new Dimension(TEXTURE_SIZE, TEXTURE_SIZE));
     }
 
-    public HashMap<String, Texture> getWallTextures() {
+    public Texture[] getWallTextures() {
         return wallTextures;
     }
 
-    private static HashMap<String, Texture> loadWallTextures() {
-        HashMap<String, Texture> textures = new HashMap<>();
-        textures.put("1", new Texture("src/eliascregard/res/textures/1.png"));
-        textures.put("2", new Texture("src/eliascregard/res/textures/2.png"));
-        textures.put("3", new Texture("src/eliascregard/res/textures/3.png"));
-        textures.put("4", new Texture("src/eliascregard/res/textures/4.png"));
-        textures.put("5", new Texture("src/eliascregard/res/textures/5.png"));
+    private static Texture[] loadWallTextures() {
+        Texture[] textures = new Texture[]{
+                new Texture(RES_FOLDER + "textures/1.png"),
+                new Texture(RES_FOLDER + "textures/2.png"),
+                new Texture(RES_FOLDER + "textures/3.png"),
+                new Texture(RES_FOLDER + "textures/4.png"),
+                new Texture(RES_FOLDER + "textures/5.png")
+        };
         return textures;
     }
 
