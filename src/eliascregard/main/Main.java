@@ -121,39 +121,6 @@ public class Main {
                 }
         ));
 
-        double[] vertices = {
-                -0.5, 0.5, 0,
-                0.5, 0.5, 0,
-                0.5, -0.5, 0,
-                -0.5, -0.5, 0
-
-
-        };
-
-        double[] textureVertices = {
-                0, 0,
-                1, 0,
-                1, 1,
-                0, 1
-        };
-
-        int[] indices = {
-                0, 1, 2,
-                2, 3, 0
-        };
-
-//        Shader shader = new Shader(RES_FOLDER + "shaders/shader_vs.glsl", RES_FOLDER + "shaders/shader_fs.glsl");
-//        shader.bind();
-//        Model model = new Model(vertices, textureVertices, indices);
-//
-//        Texture texture1 = new Texture(RES_FOLDER + "textures/1.png");
-//
-//        Texture texture2 = new Texture(RES_FOLDER + "textures/2.png");
-//
-//
-//        Matrix4f projection1 = new Matrix4f().ortho(-HALF_WIDTH, HALF_WIDTH, -HALF_HEIGHT, HALF_HEIGHT, -1, 1).scale(TEXTURE_SIZE);
-//        Matrix4f projection2 = new Matrix4f().ortho(-HALF_WIDTH, HALF_WIDTH, -HALF_HEIGHT, HALF_HEIGHT, -1, 1).scale(HALF_TEXTURE_SIZE);
-
         glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
@@ -162,27 +129,11 @@ public class Main {
         while (!glfwWindowShouldClose(window)) {
             long startTime = System.nanoTime();
 
-            long time = System.nanoTime();
             game.update(window, deltaTime);
-//            System.out.println("update: " + (System.nanoTime() - time) / 1_000_000_000.0);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            time = System.nanoTime();
             game.draw();
-//            System.out.println("draw: " + (System.nanoTime() - time) / 1_000_000_000.0);
-
-//            for (int i = 0; i < 500; i++) {
-//                shader.setUniform("sampler", 1);
-//                shader.setUniform("projection", projection1);
-//                model.render();
-//                texture1.bind(1);
-//
-//                shader.setUniform("sampler", 2);
-//                shader.setUniform("projection", projection2);
-//                model.render();
-//                texture2.bind(2);
-//            }
 
             glfwSwapBuffers(window); // swap the color buffers
 
