@@ -126,6 +126,8 @@ public class Main {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         double deltaTime = 0;
+        int totalFrames = 0;
+        long averageFps = 0;
         while (!glfwWindowShouldClose(window)) {
             long startTime = System.nanoTime();
 
@@ -143,9 +145,13 @@ public class Main {
 
 
             deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0;
-            System.out.println((int) (1 / deltaTime) + " fps");
+            int fps = (int) (1 / deltaTime);
+            System.out.println(fps + " fps");
+            totalFrames++;
+            averageFps += fps;
 
         }
+        System.out.println("Average fps: " + averageFps / totalFrames);
     }
 
     public static void main(String[] args) {
