@@ -12,7 +12,7 @@ public class Settings {
     public static final int HALF_HEIGHT = SCREEN_SIZE.height / 2;
     public static final int FPS = 200;
     public static final int TICKSPEED = 0;
-    public static final double FOV = Math.toRadians(60);
+    public static final double FOV = Math.toRadians(90);
     public static final double HALF_FOV = FOV / 2;
     public static final int NUM_RAYS = SCREEN_SIZE.width;
     public static final int HALF_NUM_RAYS = NUM_RAYS / 2;

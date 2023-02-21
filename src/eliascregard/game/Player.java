@@ -34,6 +34,9 @@ public class Player {
     }
     public void rotate(double deltaAngle) {
         angle = (angle + deltaAngle) % Math.TAU;
+        if (angle < 0) {
+            angle += Math.TAU;
+        }
     }
 
     public void update(long window, double deltaTime) {

@@ -89,7 +89,7 @@ public class Main {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         // Enable v-sync
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -146,9 +146,10 @@ public class Main {
 
             deltaTime = (System.nanoTime() - startTime) / 1_000_000_000.0;
             int fps = (int) (1 / deltaTime);
-            System.out.println(fps + " fps");
+//            System.out.println(fps + " fps");
             totalFrames++;
             averageFps += fps;
+            System.out.println(game.getPlayer().getAngle());
 
         }
         System.out.println("Average fps: " + averageFps / totalFrames);

@@ -2,8 +2,10 @@ package eliascregard.game;
 
 import eliascregard.graphics.ObjectRenderer;
 import eliascregard.graphics.Texture;
+import eliascregard.util.Vector2;
 
 import static eliascregard.main.Settings.*;
+import static eliascregard.util.Global.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
@@ -45,17 +47,13 @@ public class Game {
 
     public void draw() {
         skyTexture.bind();
-        glBegin(GL_QUADS);
-            glColor3f(1, 1,1);
-            glTexCoord2f(0, 0);
-            glVertex2f(-1, 1);
-            glTexCoord2f(1, 0);
-            glVertex2f(1, 1);
-            glTexCoord2f(1, 1);
-            glVertex2f(1, 0);
-            glTexCoord2f(0, 1);
-            glVertex2f(-1, 0);
-        glEnd();
+        double directionOffset = player.getAngle() / Math.PI;
+        double x2 = 1;
+        if (directionOffset > 1) {
+            x2 = -3;
+        }
+        renderTexturedQuad(1 - 2 * directionOffset, 1, 2, 1);
+        renderTexturedQuad(-(x2 + 2 * directionOffset), 1, 2, 1);
 
         objectRenderer.draw();
     }
